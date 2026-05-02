@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import uuid
 # Import the engine logic directly for a monolith architecture
-from backend.engine import get_chat_response[cite: 1]
+from backend.engine import get_chat_response
 
 # 2. Page Configuration
 st.set_page_config(
@@ -31,10 +31,10 @@ with st.sidebar:
     **Specialties:**
     - AI-Enabled Observability
     - Self-Healing Infra
-    - Kubernetes & Go[cite: 1]
+    - Kubernetes & Go
     """)
     
-    st.info("This AI is trained on my professional history. Ask it about my projects, tech stack, or certifications.[cite: 1]")
+    st.info("This AI is trained on my professional history. Ask it about my projects, tech stack, or certifications.")
     
     if st.button("Clear Chat History"):
         st.session_state.messages = []
@@ -69,7 +69,7 @@ if prompt := st.chat_input("Ask me about Antriksh's experience..."):
         
         try:
             # MONOLITH UPDATE: Calling the function directly instead of using requests.post
-            full_response = get_chat_response(prompt, st.session_state.session_id)[cite: 1]
+            full_response = get_chat_response(prompt, st.session_state.session_id)
             
             # Display result
             message_placeholder.markdown(full_response)
@@ -78,6 +78,6 @@ if prompt := st.chat_input("Ask me about Antriksh's experience..."):
         except Exception as e:
             # Helpful error message for missing secrets/environment variables
             if "OPENAI_API_KEY" in str(e):
-                st.error("Missing OpenAI API Key. Please add it to your Streamlit Secrets.")[cite: 1]
+                st.error("Missing OpenAI API Key. Please add it to your Streamlit Secrets.")
             else:
                 st.error(f"An unexpected error occurred: {e}")
