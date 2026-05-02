@@ -15,4 +15,4 @@ __pycache__/
 faiss_index/
 
 # Data
-my_career.txt
+#my_career.txt

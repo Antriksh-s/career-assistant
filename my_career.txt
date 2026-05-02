@@ -1,0 +1,41 @@
+CANDIDATE PROFILE: Antriksh Singh
+Current Role: DevOps Engineer | AI Governance & Observability and self healing infrastructure Specialist
+Experience Level: About 6 years of professional experience in DevOps and Site Reliability Engineering (SRE).
+
+PROFESSIONAL SUMMARY
+AWS Certified Solutions Architect, Red Hat certifid System Administrator, Red Hat Certified Engineer (RHCE) with a focus on high-performance infrastructure automation.  
+Specializes in transforming complex business requirements into scalable, secure, and cost-optimized production environments.  
+Expertise in AI-enabled observability, self-healing infrastructure, and event-driven automation, creating slef-service capabilities.
+
+CORE TECHNICAL SKILLS
+Cloud Platforms: AWS (Certified Solutions Architect), GCP, Azure DevOps.  
+Automation & Scripting: Python, Go, Bash, Ansible, Terraform.  
+Observability Stack: Datadog (Centralized logging/alerting/tracing), Splunk & ITSI, Grafana, PagerDuty, Logic Monitor Edwin AI, Big Panda.  
+Infrastructure & Orchestration: Linux (Expert/RHCE), Docker, Kubernetes, Apache, Tomcat, Wildfly, AWS EC2, Lambda, S3, ECS Fargate.  
+CI/CD & DevOps Tools: GitLab, GitHub Actions, GoCD, Azure DevOps, Jenkins, Rundeck, Temporal.
+Emerging AI Technologies: Agentic AI, Multi-agent architectures, AI Governance, AI Gateway (Portkey), RAG pipelines, and LLM memory management, RAG based chatbots.
+
+WORK HISTORY
+DevOps Engineer (AI Observability) | Billennium India (July 2025 – Present)  
+Sr. Site Reliability Engineer (SRE Observability) | UKG (Ultimate Kronos Group) (May 2024 – May 2025)  
+DevOps Engineer (High Availability and Disaster Recovery ) | SCALONG / iBoss Tech Solutions (Oct 2020 – May 2024)
+
+KEY PROJECTS & ACHIEVEMENTS
+AI-Driven SLO Prediction: Developed a Machine Learning model trained on Datadog synthetic data to predict the likelihood of API SLO breaches based on historical thresholds.  
+Self-Healing Infrastructure: Engineered a layer of python fast api services triggered by PagerDuty incidents to execute remediation scripts, enabling centralized, event-driven automated resolution.  
+Real-time Incident Recovery: Optimized self-healing workflows by converting a 15-minute polling system into an event-driven model by building a custom Splunk app and GitLab triggers, improving MTTR by 30%.  
+Cloud Migration & Modernization: Led the end to end migration of Java and legacy PHP monolith applications from on-premises to AWS ECS Fargate, achieving 99.99% uptime and significant cost reductions.  
+Security & Compliance Automation: Developed an ITSM solution integrating GitHub scans with JIRA to automatically assign critical vulnerability tickets to developers.  
+Cost Optimization: Re-engineered centralized logging and monitoring architecture in Datadog, resulting in a 30% reduction in annual billing.
+Created a in house observability solution for on premisis infra, with front end and a cluster of bash and python scripts, the website was capable of showing realtime matrices, db connection health and logs of more than 800 redhat and suse enterprise servers. 
+Automated Jboss version upgrade using ansible, migrating encrypted passwords from jboss configs to jboss keystore, while restoring all jdbc connections and system properties.
+
+CERTIFICATIONS & EDUCATION
+Certifications: AWS Certified Solutions Architect (Associate), Red Hat Certified Engineer (RHCE), Red Hat Certified System Administrator (RHCSA).  
+Education: Bachelor of Technology (B-Tech) in Computer Science and Engineering from Dr. A.P.J. Abdul Kalam Technical University (2020).
+10th and 12th from St Mary's Convent School
+
+AWARDS & RECOGNITION
+Innovative Mind Award from SCALONG / iBoss Tech Solutions.  
+TCS NQT Aptitude Score: 82.7%.
+Recognition from MIT Group of Institutions for delivering lecture to students of final year MCA and B-tech.
