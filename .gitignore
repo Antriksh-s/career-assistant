@@ -1,0 +1,18 @@
+# Python Virtual Environments
+career_env/
+venv/
+.env
+
+# Python Caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mac specific
+.DS_Store
+
+# Vector Store local cache
+faiss_index/
+
+# Data
+my_career.txt
