@@ -8,39 +8,60 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from backend.engine import get_chat_response
 
-# 2. Page Configuration & Custom CSS
+# 2. Page Configuration & Professional Minimalist Styling
 st.set_page_config(
-    page_title="Antriksh Singh | AI Career Assistant",
+    page_title="Antriksh Singh | AI Assistant",
     page_icon="🤖",
     layout="wide"
 )
 
-# Custom CSS for colors, animations, and smooth UI
+# Custom CSS for a clean, sophisticated look
 st.markdown("""
 <style>
-    /* Chat message styling */
-    .stChatMessage {
-        border-radius: 15px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
+    /* Remove unnecessary padding and borders */
+    .block-container { padding-top: 2rem; padding-bottom: 0rem; }
+    .stChatFloatingInputContainer { background-color: transparent; }
     
-    /* Custom Sidebar styling */
-    section[data-testid="stSidebar"] {
-        background-color: #0e1117;
+    /* Elegant typography and background */
+    h1, h2, h3, h4 { font-weight: 300 !important; letter-spacing: -0.02em; }
+    .stApp { background-color: #0f1115; }
+
+    /* Minimalist buttons for suggestions */
+    div.stButton > button {
+        background-color: #1a1c23;
+        border: 1px solid #2d2f39;
+        color: #94a3b8;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+    }
+    div.stButton > button:hover {
+        border-color: #10b981;
+        color: #10b981;
+        background-color: #10b9810a;
     }
 
-    /* Pulse animation for the loader */
-    @keyframes pulse {
-        0% { opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { opacity: 0.4; }
+    /* Subtle chat bubbles */
+    [data-testid="stChatMessage"] {
+        background-color: #161920;
+        border: 1px solid #22252e;
+        border-radius: 12px;
+        margin-bottom: 1rem;
     }
-    .loading-text {
-        font-style: italic;
-        color: #00ffa2;
-        animation: pulse 1.5s infinite;
+
+    /* Animated typing indicator */
+    .typing {
+        color: #10b981;
+        font-family: monospace;
+        overflow: hidden;
+        border-right: .15em solid #10b981;
+        white-space: nowrap;
+        margin: 0 auto;
+        letter-spacing: .15em;
+        animation: typing 2.5s steps(30, end), blink-caret .5s step-end infinite;
     }
+    @keyframes typing { from { width: 0 } to { width: 100% } }
+    @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #10b981 } }
 </style>
 """, unsafe_allow_html=True)
 
@@ -52,95 +73,66 @@ if "messages" not in st.session_state:
 if "active_prompt" not in st.session_state:
     st.session_state.active_prompt = None
 
-# 4. Sidebar
+# 4. Sidebar (Simplified)
 with st.sidebar:
-    st.title("👨‍💻 Candidate Profile")
+    st.markdown("### Antriksh Singh")
+    st.caption("SRE & DevOps Specialist")
+    st.markdown("---")
     st.markdown("""
-    **Antriksh Singh**  
-    *Sr. DevOps & SRE Specialist*
-    ---
-    **Top Certifications:**
-    - ☁️ AWS Solutions Architect
-    - 🐧 Red Hat Certified Engineer (RHCE)
-    
-    **Specialties:**
-    - AI-Enabled Observability
-    - Self-Healing Infra
-    - Kubernetes & Go
+    - AWS Solutions Architect
+    - Red Hat Certified Engineer
     """)
-    
-    if st.button("Clear Chat History", use_container_width=True):
+    if st.button("Reset Session", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
-# 5. Main Interface Header
-st.title("🤖 AI Career Assistant")
-st.caption("Advanced RAG Engine | GPT-4o-mini | SRE Knowledge Base")
+# 5. Header
+st.title("AI Assistant")
+st.caption("Context-aware retrieval of professional history.")
 
-# 6. Prompt Suggestions
-st.markdown("#### 💡 Suggested Queries")
-def handle_click(prompt_text):
-    st.session_state.active_prompt = prompt_text
-
+# 6. Minimalist Grid for Suggestions
 suggestions = [
-    "Tell me about your AI-driven SLO breach prediction project.",
-    "How did you reduce Datadog costs by 30%?",
-    "Explain your experience with Self-Healing Infrastructure.",
-    "What are your top skills in Agentic AI and RAG?",
-    "Show me your automation work with Ansible and Python.",
-    "Tell me about your cloud migrations to AWS ECS Fargate."
+    "AI-driven SLO breach prediction",
+    "Reduce Datadog costs by 30%",
+    "Self-Healing Infrastructure",
+    "Skills in Agentic AI and RAG",
+    "Automation with Ansible/Python",
+    "AWS ECS Fargate Migrations"
 ]
 
-# Grid layout for suggestions
 cols = st.columns(3)
 for i, prompt in enumerate(suggestions):
     if cols[i % 3].button(prompt, use_container_width=True):
-        handle_click(prompt)
+        st.session_state.active_prompt = prompt
 
-# 7. Unified Input Logic
-chat_input = st.chat_input("Ask about my experience...")
-final_prompt = None
-
-if chat_input:
-    final_prompt = chat_input
-elif st.session_state.active_prompt:
-    final_prompt = st.session_state.active_prompt
-    st.session_state.active_prompt = None
+# 7. Logic Flow
+chat_input = st.chat_input("Message the assistant...")
+final_prompt = chat_input if chat_input else st.session_state.active_prompt
 
 if final_prompt:
     st.session_state.messages.append({"role": "user", "content": final_prompt})
+    st.session_state.active_prompt = None
     st.rerun()
 
-# 8. Display Chat History
-chat_container = st.container()
-with chat_container:
-    for msg in st.session_state.messages:
-        avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
-        with st.chat_message(msg["role"], avatar=avatar):
-            st.markdown(msg["content"])
+# 8. Chat Display
+for msg in st.session_state.messages:
+    avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
+    with st.chat_message(msg["role"], avatar=avatar):
+        st.markdown(msg["content"])
 
-# 9. Response Logic with Animation
+# 9. Minimalist Loader & Response Execution
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_user_prompt = st.session_state.messages[-1]["content"]
     
     with st.chat_message("assistant", avatar="🤖"):
-        # Animated placeholder
-        with st.status("🧠 Analyzing request and querying career logs...", expanded=True) as status:
-            st.write("Searching vector database...")
-            time.sleep(0.5) # Small aesthetic pause
-            st.write("Retrieving SRE context...")
-            
-            try:
-                full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
-                status.update(label="✅ Analysis Complete", state="complete", expanded=False)
-                
-                # Final display with auto-scroll focus
-                st.markdown(full_response)
-                st.session_state.messages.append({"role": "assistant", "content": full_response})
-                
-                # Hidden anchor for auto-scroll
-                st.markdown('<div id="end-of-chat"></div>', unsafe_allow_html=True)
-                
-            except Exception as e:
-                status.update(label="❌ Error", state="error")
-                st.error(f"Engine failure: {e}")
+        # No more buttons/expanders. Just a clean, silent loader.
+        placeholder = st.empty()
+        placeholder.markdown("<p class='typing'>CONSULTING KNOWLEDGE BASE...</p>", unsafe_allow_html=True)
+        
+        try:
+            full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
+            placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            # Scroll handling is native to st.chat_message and st.rerun
+        except Exception as e:
+            placeholder.error("System connection interrupted.")
