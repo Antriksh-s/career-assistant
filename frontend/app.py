@@ -2,22 +2,49 @@ import sys
 import os
 import uuid
 import streamlit as st
+import time
 
-# 1. PATH FIX: Adds the root directory to the python path 
-# so Streamlit Cloud can find the 'backend' folder
+# 1. PATH FIX
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Import the engine logic directly for a monolith architecture
 from backend.engine import get_chat_response
 
-# 2. Page Configuration
+# 2. Page Configuration & Custom CSS
 st.set_page_config(
     page_title="Antriksh Singh | AI Career Assistant",
     page_icon="🤖",
     layout="wide"
 )
 
-# 3. State Management (Must be initialized before UI interaction)
+# Custom CSS for colors, animations, and smooth UI
+st.markdown("""
+<style>
+    /* Chat message styling */
+    .stChatMessage {
+        border-radius: 15px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    /* Custom Sidebar styling */
+    section[data-testid="stSidebar"] {
+        background-color: #0e1117;
+    }
+
+    /* Pulse animation for the loader */
+    @keyframes pulse {
+        0% { opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { opacity: 0.4; }
+    }
+    .loading-text {
+        font-style: italic;
+        color: #00ffa2;
+        animation: pulse 1.5s infinite;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# 3. State Management
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 if "messages" not in st.session_state:
@@ -25,7 +52,7 @@ if "messages" not in st.session_state:
 if "active_prompt" not in st.session_state:
     st.session_state.active_prompt = None
 
-# 4. Sidebar for Portfolio Details
+# 4. Sidebar
 with st.sidebar:
     st.title("👨‍💻 Candidate Profile")
     st.markdown("""
@@ -42,81 +69,78 @@ with st.sidebar:
     - Kubernetes & Go
     """)
     
-    st.info("This AI is trained on my professional history. Ask it about my projects, tech stack, or certifications.")
-    
-    if st.button("Clear Chat History"):
+    if st.button("Clear Chat History", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
 # 5. Main Interface Header
-st.title("🤖 AI Assistant")
-st.caption("Powered by RAG (Retrieval-Augmented Generation) & GPT-4o-mini")
+st.title("🤖 AI Career Assistant")
+st.caption("Advanced RAG Engine | GPT-4o-mini | SRE Knowledge Base")
 
-# 6. Prompt Suggestions Grid
-st.markdown("### 💡 Explore Antriksh's Expertise")
-
+# 6. Prompt Suggestions
+st.markdown("#### 💡 Suggested Queries")
 def handle_click(prompt_text):
     st.session_state.active_prompt = prompt_text
 
-suggestions_row1 = [
+suggestions = [
     "Tell me about your AI-driven SLO breach prediction project.",
     "How did you reduce Datadog costs by 30%?",
-    "Explain your experience with Self-Healing Infrastructure."
-]
-suggestions_row2 = [
+    "Explain your experience with Self-Healing Infrastructure.",
     "What are your top skills in Agentic AI and RAG?",
     "Show me your automation work with Ansible and Python.",
     "Tell me about your cloud migrations to AWS ECS Fargate."
 ]
 
-cols1 = st.columns(3)
-for i, prompt in enumerate(suggestions_row1):
-    if cols1[i].button(prompt, use_container_width=True):
+# Grid layout for suggestions
+cols = st.columns(3)
+for i, prompt in enumerate(suggestions):
+    if cols[i % 3].button(prompt, use_container_width=True):
         handle_click(prompt)
 
-cols2 = st.columns(3)
-for i, prompt in enumerate(suggestions_row2):
-    if cols2[i].button(prompt, use_container_width=True):
-        handle_click(prompt)
-
-# 7. Unified Input Logic (Buttons or Text Input)
-chat_input = st.chat_input("Ask me about Antriksh's experience...")
+# 7. Unified Input Logic
+chat_input = st.chat_input("Ask about my experience...")
 final_prompt = None
 
 if chat_input:
     final_prompt = chat_input
 elif st.session_state.active_prompt:
     final_prompt = st.session_state.active_prompt
-    st.session_state.active_prompt = None  # Clear the state immediately
+    st.session_state.active_prompt = None
 
 if final_prompt:
-    # Add user message to state and rerun to update UI before AI processing
     st.session_state.messages.append({"role": "user", "content": final_prompt})
     st.rerun()
 
-# 8. Display Chat History with Professional Avatars
-for msg in st.session_state.messages:
-    avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
-    with st.chat_message(msg["role"], avatar=avatar):
-        st.markdown(msg["content"])
+# 8. Display Chat History
+chat_container = st.container()
+with chat_container:
+    for msg in st.session_state.messages:
+        avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
+        with st.chat_message(msg["role"], avatar=avatar):
+            st.markdown(msg["content"])
 
-# 9. Generate AI Response (Triggered if the last message is from user)
+# 9. Response Logic with Animation
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_user_prompt = st.session_state.messages[-1]["content"]
     
     with st.chat_message("assistant", avatar="🤖"):
-        message_placeholder = st.empty()
-        message_placeholder.markdown("🔍 *Scanning career database...*")
-        
-        try:
-            # Direct call to the backend engine
-            full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
+        # Animated placeholder
+        with st.status("🧠 Analyzing request and querying career logs...", expanded=True) as status:
+            st.write("Searching vector database...")
+            time.sleep(0.5) # Small aesthetic pause
+            st.write("Retrieving SRE context...")
             
-            message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            try:
+                full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
+                status.update(label="✅ Analysis Complete", state="complete", expanded=False)
                 
-        except Exception as e:
-            if "OPENAI_API_KEY" in str(e):
-                st.error("Missing OpenAI API Key. Please add it to your Streamlit Secrets.")
-            else:
-                st.error(f"An unexpected error occurred: {e}")
+                # Final display with auto-scroll focus
+                st.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                
+                # Hidden anchor for auto-scroll
+                st.markdown('<div id="end-of-chat"></div>', unsafe_allow_html=True)
+                
+            except Exception as e:
+                status.update(label="❌ Error", state="error")
+                st.error(f"Engine failure: {e}")
