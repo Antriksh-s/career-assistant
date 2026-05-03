@@ -41,22 +41,75 @@ with st.sidebar:
         st.rerun()
 
 # 4. Main Interface Header
-st.title("🤖 AI Career Assistant")
+st.title("🤖 AI Assistant")
 st.caption("Powered by RAG (Retrieval-Augmented Generation) & GPT-4o-mini")
 
-# 5. State Management
+
+# 5. Prompt Suggestions
+st.markdown("### 💡 Explore Antriksh's Expertise")
+
+# Create two rows of three buttons for a clean grid
+suggestions_row1 = [
+    "Tell me about your AI-driven SLO breach prediction project.",
+    "How did you reduce Datadog costs by 30%?",
+    "Explain your experience with Self-Healing Infrastructure."
+]
+suggestions_row2 = [
+    "What are your top skills in Agentic AI and RAG?",
+    "Show me your automation work with Ansible and Python.",
+    "Tell me about your cloud migrations to AWS ECS Fargate."
+]
+
+def handle_click(prompt):
+    st.session_state.suggestion_clicked = prompt
+
+# Row 1
+cols1 = st.columns(3)
+for i, prompt in enumerate(suggestions_row1):
+    if cols1[i].button(prompt, use_container_width=True):
+        handle_click(prompt)
+
+# Row 2
+cols2 = st.columns(3)
+for i, prompt in enumerate(suggestions_row2):
+    if cols2[i].button(prompt, use_container_width=True):
+        handle_click(prompt)
+
+# Logic to handle the click and trigger the RAG response
+if "suggestion_clicked" in st.session_state and st.session_state.suggestion_clicked:
+    current_prompt = st.session_state.suggestion_clicked
+    st.session_state.suggestion_clicked = None  # Reset state
+    
+    # Add user message to UI
+    st.session_state.messages.append({"role": "user", "content": current_prompt})
+    with st.chat_message("user", avatar="👨‍💻"):
+        st.markdown(current_prompt)
+
+    with st.chat_message("assistant", avatar="🤖"):
+        message_placeholder = st.empty()
+        message_placeholder.markdown("🔍 *Scanning career database...*")
+        try:
+            # Directly calling the engine (Monolith Approach)
+            full_response = get_chat_response(current_prompt, st.session_state.session_id)
+            message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+        except Exception as e:
+            st.error(f"Error: {e}")
+
+
+# 6. State Management
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 6. Display Chat History with Professional Avatars
+# 7. Display Chat History with Professional Avatars
 for msg in st.session_state.messages:
     avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
     with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
 
-# 7. Chat Input & Direct Logic Execution
+# 8. Chat Input & Direct Logic Execution
 if prompt := st.chat_input("Ask me about Antriksh's experience..."):
     # Add user message to UI
     st.session_state.messages.append({"role": "user", "content": prompt})
