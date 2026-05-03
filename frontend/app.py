@@ -2,7 +2,6 @@ import sys
 import os
 import uuid
 import streamlit as st
-import time
 
 # 1. PATH FIX
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -15,50 +14,57 @@ st.set_page_config(
     layout="wide"
 )
 
-# 3. Dynamic Theme CSS
-# This CSS uses system-aware colors and variables to fix the 'black box' issue in light mode.
+# 3. Enhanced Dynamic Theme CSS
+# This version adds a sophisticated color palette for Light Mode (Sky Blue/Emerald)
 st.markdown("""
 <style>
-    /* Adaptive typography and spacing */
-    .block-container { padding-top: 2rem; padding-bottom: 0rem; }
-    h1, h2, h3, h4 { font-weight: 300 !important; letter-spacing: -0.02em; }
+    /* 1. Global Background & Typography */
+    .block-container { padding-top: 2rem; }
+    h1, h2, h3 { font-weight: 300 !important; }
 
-    /* Dynamic Button Styling (Minimalist) */
+    /* 2. Suggestion Buttons - Professional Tones */
     div.stButton > button {
-        background-color: rgba(128, 128, 128, 0.05);
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        border-radius: 8px;
+        background-color: rgba(16, 185, 129, 0.03);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        border-radius: 10px;
         transition: all 0.3s ease;
-        font-size: 0.85rem;
     }
     div.stButton > button:hover {
-        border-color: #10b981;
-        color: #10b981;
-        background-color: rgba(16, 185, 129, 0.05);
+        background-color: #10b981;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
     }
 
-    /* Adaptive Chat Bubbles - Fixes the 'Black Box' issue */
-    [data-testid="stChatMessage"] {
-        background-color: rgba(128, 128, 128, 0.05); /* Transparent grey adapted to theme */
-        border: 1px solid rgba(128, 128, 128, 0.1);
-        border-radius: 12px;
-        margin-bottom: 1rem;
+    /* 3. Adaptive Chat Bubbles */
+    /* User Message: Subtle Blue */
+    [data-testid="stChatMessageUser"] {
+        background-color: rgba(59, 130, 246, 0.05); 
+        border: 1px solid rgba(59, 130, 246, 0.1);
+        border-radius: 15px 15px 0px 15px;
     }
 
-    /* Emerald Accent for the Bot */
+    /* Assistant Message: Subtle Emerald */
     [data-testid="stChatMessageAssistant"] {
-        border-left: 3px solid #10b981;
+        background-color: rgba(16, 185, 129, 0.05);
+        border: 1px solid rgba(16, 185, 129, 0.1);
+        border-radius: 15px 15px 15px 0px;
     }
 
-    /* Animated typing indicator */
-    .typing {
-        color: #10b981;
-        font-family: 'Source Code Pro', monospace;
-        font-size: 0.8rem;
-        letter-spacing: 0.1rem;
-        animation: blink 1s infinite;
+    /* 4. The Sidebar - Clean Slate */
+    section[data-testid="stSidebar"] {
+        background-color: rgba(248, 250, 252, 0.5);
     }
-    @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+    /* 5. Animated Typing Indicator */
+    .typing-text {
+        color: #10b981;
+        font-weight: 500;
+        font-size: 0.85rem;
+        letter-spacing: 0.05rem;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 </style>
 """, unsafe_allow_html=True)
 
@@ -70,24 +76,25 @@ if "messages" not in st.session_state:
 if "active_prompt" not in st.session_state:
     st.session_state.active_prompt = None
 
-# 5. Sidebar (Minimalist & Clean)
+# 5. Sidebar (Professional Profile)
 with st.sidebar:
     st.markdown("### Antriksh Singh")
-    st.caption("SRE & DevOps Specialist")
+    st.caption("Sr. DevOps & SRE Specialist")
     st.markdown("---")
     st.markdown("""
-    - AWS Solutions Architect
-    - Red Hat Certified Engineer (RHCE)
+    **Core Credentials:**
+    - ☁️ AWS Solutions Architect
+    - 🐧 Red Hat Certified Engineer
     """)
     if st.button("Reset Session", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
-# 6. Header
-st.title("AI Assistant")
-st.caption("A context-aware retrieval engine built on professional history.")
+# 6. Main Header
+st.title("AI Career Assistant")
+st.caption("Leveraging RAG to explore Antriksh's engineering journey.")
 
-# 7. Subtle Grid for Suggestions
+# 7. Colorful Suggestion Grid
 suggestions = [
     "AI-driven SLO breach prediction",
     "Reduce Datadog costs by 30%",
@@ -102,8 +109,8 @@ for i, prompt in enumerate(suggestions):
     if cols[i % 3].button(prompt, use_container_width=True):
         st.session_state.active_prompt = prompt
 
-# 8. Unified Logic Handler
-chat_input = st.chat_input("Message the assistant...")
+# 8. Unified Logic
+chat_input = st.chat_input("Ask a question...")
 final_prompt = chat_input if chat_input else st.session_state.active_prompt
 
 if final_prompt:
@@ -117,18 +124,17 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"], avatar=avatar):
         st.markdown(msg["content"])
 
-# 10. Minimalist Loader & Adaptive Execution
+# 10. Execution with Animated Loader
 if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     last_user_prompt = st.session_state.messages[-1]["content"]
     
     with st.chat_message("assistant", avatar="🤖"):
         placeholder = st.empty()
-        placeholder.markdown("<p class='typing'>CONSULTING KNOWLEDGE BASE...</p>", unsafe_allow_html=True)
+        placeholder.markdown("<p class='typing-text'>⚡ RETRIEVING CAREER INSIGHTS...</p>", unsafe_allow_html=True)
         
         try:
-            # Monolith logic call
             full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
             placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
         except Exception as e:
-            placeholder.error("System connection interrupted.")
+            placeholder.error("Service temporarily unavailable.")
