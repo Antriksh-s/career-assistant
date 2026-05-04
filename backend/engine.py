@@ -48,7 +48,7 @@ def get_chat_response(user_input: str, session_id: str):
     history.append(HumanMessage(content=augmented_user_input))
     
     # 4. CALL LLM
-    llm = ChatOpenAI(model="gpt-4o", temperature=0) # Lower temperature for factual accuracy
+    llm = ChatOpenAI(model="gpt-4o", temperature=2) # Lower temperature for factual accuracy
     response = llm.invoke(history)
     
     history.append(AIMessage(content=response.content))
