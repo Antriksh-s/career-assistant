@@ -118,7 +118,7 @@ Consistency: Standardized alert configurations across three major platforms (Gra
 Project 4: Real-time Incident Recovery: 
 Optimized self-healing workflows by converting a 15-minute polling system into an event-driven model by building a custom Splunk app and GitLab triggers, improving MTTR by 30%.  
 
-Enterprise Legacy-to-Cloud Migration
+Project 5: Enterprise Legacy-to-Cloud Migration
 Focus: Cloud Modernization, High Availability, and Cost Optimization
 
 1. Business Use Case & Problem Statement
@@ -152,7 +152,7 @@ Uptime: Achieved 99.99% (Four Nines) availability, eliminating the previous on-p
 Cost Efficiency: Realized significant reduction in TCO (Total Cost of Ownership) by moving to a serverless (pay-as-you-go) model.
 Agility: Reduced deployment lead time and simplified environment consistency through containerization.
 
-Project 4: Automated DevSecOps Vulnerability Management
+Project 6: Automated DevSecOps Vulnerability Management
 Focus: Security Automation, Developer Accountability, and Real-time Compliance
 
 1. Business Use Case & Problem Statement
@@ -182,7 +182,7 @@ Accountability: Eliminated the "blame game" by directly linking vulnerabilities 
 Response Time: Drastically reduced the window between vulnerability introduction and ticket creation from days to seconds.
 Visibility: Provided a "Single Pane of Glass" for the security team via Datadog, moving from reactive scanning to proactive security management.
 
-Project 5: Multi-Vector Cloud Cost Optimization & FinOps
+Project 7: Multi-Vector Cloud Cost Optimization & FinOps
 Focus: Infrastructure Cost Reduction, Log Aggregation, and On-Demand Observability
 
 1. Business Use Case & Problem Statement
@@ -215,7 +215,7 @@ Direct Savings: Achieved an overall 30% reduction in annual Datadog billing.
 Infrastructure Efficiency: Reduced the "Observability Tax" per host, allowing the team to scale the fleet without a linear increase in monitoring costs.
 DevEx Improvement: Empowered developers with self-service APM tools, fostering a culture of cost-awareness and ownership.
 
-Project 6: Custom Enterprise Observability Platform (In-House)
+Project 8: Custom Enterprise Observability Platform (In-House)
 Focus: Full-Stack Internal Tooling, Remote Monitoring, and Legacy Systems Optimization
 
 1. Business Use Case & Problem Statement
@@ -247,7 +247,7 @@ Scale: Successfully managed and monitored a large-scale environment of 800+ RedH
 Operational Velocity: Reduced Mean Time to Resolution (MTTR) by centralizing logs and health data that previously required manual SSH logins for every incident.
 Cost Savings: Delivered a comprehensive observability solution at zero licensing cost, proving the viability of in-house tooling for complex enterprise environments.
 
-Automations:
+Project 8: Automations:
 Automated Jboss version upgrade using ansible, migrating encrypted passwords from jboss configs to jboss keystore, while restoring all jdbc connections and system properties.
 CICD: Designed and implimented CICD solutions using GitHub actions, GutLab CI/CD, GoCd, Jenkins along with Bash, Python, Ansible.
 Wrote multiple scripts in Python and bash for automating day to day repetitive tasks. 
