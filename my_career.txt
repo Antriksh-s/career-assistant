@@ -22,14 +22,232 @@ Sr. Site Reliability Engineer (SRE Observability) | UKG (Ultimate Kronos Group) 
 DevOps Engineer (High Availability and Disaster Recovery ) | SCALONG / iBoss Tech Solutions (Oct 2020 – May 2024)
 
 KEY PROJECTS & ACHIEVEMENTS
-AI-Driven SLO Prediction: Developed a Machine Learning model trained on Datadog synthetic data to predict the likelihood of API SLO breaches based on historical thresholds.  
-Self-Healing Infrastructure: Engineered a layer of python fast api services triggered by PagerDuty incidents to execute remediation scripts, enabling centralized, event-driven automated resolution replacing manual incident response to a automated reactive approach. 
-AI PR review: Created a agentic AI code review solution with GH actions to trigger on push and approve or comment all the corrections required in the code PR, removing manual fatigue in case of GH code based self service capabilities like alert creation in Grafan/Splunk/Datadog.  
-Real-time Incident Recovery: Optimized self-healing workflows by converting a 15-minute polling system into an event-driven model by building a custom Splunk app and GitLab triggers, improving MTTR by 30%.  
-Cloud Migration & Modernization: Led the end to end migration of Java and legacy PHP monolith applications from on-premises to AWS ECS Fargate, achieving 99.99% uptime and significant cost reductions.  
-Security & Compliance Automation: Developed an ITSM solution integrating GitHub code and secret scans with JIRA to automatically assign critical vulnerability tickets to developers, connected with Datadog dashboards providing security teams a overall view.
-Cost Optimization: Re-engineered centralized logging and monitoring architecture in Datadog using best practices and open-source log sync capabilities like Rsyslog, resulting in a 30% reduction in annual billing.
-Created a in house observability solution for on premisis infra, with front end and a cluster of bash and python scripts, the website was capable of showing realtime matrices, db connection health and logs of more than 800 redhat and suse enterprise servers. 
+
+Project 1: AI-Driven Predictive SLO Management
+Focus: AIOps, Machine Learning, and Proactive Reliability Engineering
+
+1. Business Use Case & Problem Statement
+
+Challenge: Standard SLO (Service Level Objective) monitoring is historically reactive, alerting teams only after an error budget has been significantly depleted.
+Pain Points: Lack of early-warning systems for "slow-burn" issues that don't trigger immediate thresholds but inevitably lead to SLO breaches over time.
+Goal: Leverage historical performance data to forecast the probability of future SLO violations, allowing teams to intervene before reliability is impacted.
+
+2. Technical Execution & Methodology
+
+Data Engineering:
+Extracted and processed two years of high-resolution Datadog Synthetic and API performance data.
+Cleaned and structured the dataset to identify patterns in latency, error rates, and historical threshold crossings.
+
+Machine Learning Model:
+
+Developed and trained a predictive model (e.g., Time-Series Forecasting or Logistic Regression) to calculate the likelihood of an SLO breach within a specific look-ahead window.
+Engineered features based on seasonal trends, deployment frequency, and historical failure modes.
+
+Visualization & Dashboarding:
+
+Integrated the model's output back into Datadog Dashboards using custom metrics.
+Created probability graphs that visualized the "Likelihood of Breach" for various microservices.
+
+Predictive Alerting:
+Configured Datadog monitors to trigger alerts when the "Probability Graph" showed a consistent upward trend, signaling a statistically significant risk of an upcoming breach.
+
+3. Key Metrics & Results
+
+Proactive Mitigation: Enabled teams to identify and fix performance degradation 24–48 hours before an actual SLO breach would have occurred.
+Error Budget Preservation: Significantly reduced the number of "exhausted" error budgets by providing a lead-time for remediation.
+AIOps Maturity: Successfully transitioned the organization from basic monitoring to advanced, data-driven observability.
+
+Project 2: Event-Driven Self-Healing Infrastructure
+Focus: Autonomous Remediation, Incident Response Automation, and SRE Best Practices
+
+1. Business Use Case & Problem Statement
+
+Challenge: The operations team was burdened by "alert fatigue," spending significant time manually executing Standard Operating Procedures (SOPs) for well-known, recurring issues.
+Pain Points: High Mean Time to Resolution (MTTR) due to manual intervention and human error during high-pressure incidents.
+Goal: Transition from a manual, reactive incident response model to an automated, self-healing architecture where the infrastructure repairs itself for known failure modes.
+
+2. Technical Execution & Methodology
+
+Closed-Loop Orchestration:
+Designed a seamless integration between PagerDuty and GitHub Actions using webhooks and custom Python middleware.
+Configured the system so that specific PagerDuty incident types (with well-defined SOPs) acted as triggers for automated recovery workflows.
+
+Automated Remediation Logic:
+Developed a library of Python remediation scripts capable of performing tasks such as service restarts, clearing stuck cache buffers, rotating expired credentials, or scaling resources.
+
+Intelligent Escalation & Error Handling:
+Implemented a "Verification Gate" in the code logic: After executing a remediation script, the system performed a health check to verify if the issue was resolved.
+Fallback Mechanism: If the remediation failed or the health check remained negative, the system automatically escalated the incident to the on-call engineer, ensuring no critical failure went unnoticed.
+Auditability: Every automated action was logged back into the PagerDuty incident notes and GitHub Action logs, providing a full audit trail for post-mortem analysis.
+
+3. Key Metrics & Results
+
+MTTR Reduction: Drastically lowered the Mean Time to Resolution by executing fixes in seconds rather than waiting for an engineer to acknowledge a page.
+Operational Efficiency: Automated 100% of the "toil" associated with well-documented recurring incidents, allowing the SRE team to focus on long-term architectural improvements.
+Reliability: Standardized the response to common failures, eliminating the risk of human error during emergency troubleshooting. 
+
+Project 3: Agentic AI Automated Code Reviewer
+Focus: LLMOps, GitOps Automation, and Platform Engineering
+
+1. Business Use Case & Problem Statement
+
+Challenge: The SRE team launched a self-service capability allowing developers to configure observability monitors (Grafana, Splunk, Datadog) directly via GitHub.
+Pain Points: The success of the tool led to a high volume of Pull Requests (30+ daily). Manual reviews for syntax, naming standards, and best practices became a massive time-sink and a bottleneck for developer velocity.
+Goal: Automate the approval and feedback cycle for observability-as-code using an AI agent to ensure 24/7 rapid PR processing.
+
+2. Technical Execution & Methodology
+Trigger & Orchestration: Integrated the solution with GitHub Actions, configured to trigger on every push event to specific directories (Grafana/Splunk/Datadog configs).
+
+Agentic Architecture:
+Developed an AI Agent with domain-specific personas for different observability platforms.
+Implemented System Prompting that defined strict syntax requirements, tagging standards, and logic validation for Grafana dashboards, Splunk alerts, and Datadog monitors.
+
+Tool Calling (Function Calling):
+
+The agent was equipped with functional tools to interact with the GitHub API.
+Decision Logic: If the PR met all predefined standards, the agent autonomously executed the Approve tool.
+Feedback Loop: If discrepancies were found, the agent called a Comment tool to provide precise, actionable feedback directly on the specific lines of code.
+Self-Service Validation: The agent specifically targeted "self-service" files, ensuring that user-generated monitor configurations wouldn't break production observability.
+
+3. Key Metrics & Results
+
+Efficiency: Eliminated manual review fatigue for 30+ daily PRs, allowing the SRE team to focus on high-value engineering tasks.
+Velocity: Reduced the "Time-to-Merge" for observability configurations from hours to minutes.
+Consistency: Standardized alert configurations across three major platforms (Grafana, Splunk, Datadog), ensuring no "rogue" or non-compliant monitors were deployed.
+
+Project 4: Real-time Incident Recovery: 
+Optimized self-healing workflows by converting a 15-minute polling system into an event-driven model by building a custom Splunk app and GitLab triggers, improving MTTR by 30%.  
+
+Enterprise Legacy-to-Cloud Migration
+Focus: Cloud Modernization, High Availability, and Cost Optimization
+
+1. Business Use Case & Problem Statement
+
+Challenge: The organization relied on a fleet of 12+ legacy Java and PHP monolith applications hosted in an on-premises data center.
+Pain Points: Frequent downtime due to aging infrastructure, lack of scalability, and high maintenance costs.
+Goal: Move to a modern, highly available, serverless architecture on AWS with zero code changes to the legacy applications.
+
+2. Technical Execution & Methodology
+
+System Analysis: Performed a deep-dive audit of 12+ applications, mapping complex system designs, secret management, database connections, and legacy tagging schemas.
+
+Containerization Strategy:
+
+Engineered multi-stage (two-layer) Dockerfiles to optimize image size and security.
+Identified and encapsulated over 50 PHP runtime dependencies directly into the images to ensure environment parity.
+
+Storage & Persistence:
+
+Architected a seamless storage transition by replacing on-premises mount points with AWS EFS.
+Meticulously mirrored exact directory structures and POSIX permissions, enabling a "lift-and-shift" without requiring developers to rewrite legacy code.
+
+Database Migration:
+Orchestrated the transition from on-premises PostgreSQL instances to Amazon RDS (PostgreSQL), enhancing reliability through automated backups and multi-AZ failover.
+Deployment Pipeline:
+Successfully validated the architecture in UAT before a seamless production cutover to AWS ECS Fargate.
+
+3. Key Metrics & Results
+
+Uptime: Achieved 99.99% (Four Nines) availability, eliminating the previous on-premises downtime issues.
+Cost Efficiency: Realized significant reduction in TCO (Total Cost of Ownership) by moving to a serverless (pay-as-you-go) model.
+Agility: Reduced deployment lead time and simplified environment consistency through containerization.
+
+Project 4: Automated DevSecOps Vulnerability Management
+Focus: Security Automation, Developer Accountability, and Real-time Compliance
+
+1. Business Use Case & Problem Statement
+
+Challenge: The security team was overwhelmed with manual tracking of secrets and vulnerabilities found in GitHub, leading to delayed remediation and lack of developer ownership.
+Pain Points: "Siloed" security data meant vulnerabilities often sat in scan logs without being converted into actionable tasks, creating a significant compliance risk.
+Goal: Automate the end-to-end lifecycle of a vulnerability—from detection at the code-push level to assignment and executive visibility.
+
+2. Technical Execution & Methodology
+
+Detection Layer: Leveraged GitHub Advanced Security (GHAS) to trigger automated secret and static code scans (SAST) immediately upon every push event.
+Automation Engine & Webhooks:
+Developed a middleware automation that captured the output of GHAS scans.
+Configured Webhooks to push findings to JIRA in real-time.
+
+Smart Ticket Orchestration:
+Automated the creation of JIRA tickets populated with critical metadata: CVE details, impact statements, and remediation steps.
+Implemented logic to dynamically assign tickets to the specific developer responsible for the code change, ensuring immediate accountability.
+
+Executive Observability:
+Integrated the workflow with Datadog, streaming security events to centralized dashboards.
+Created visualizations for Security Architects to track "Mean Time to Remediate" (MTTR), open vulnerability counts, and overall security posture across the organization.
+
+3. Key Metrics & Results
+
+Accountability: Eliminated the "blame game" by directly linking vulnerabilities to the source code author in their primary workspace (JIRA).
+Response Time: Drastically reduced the window between vulnerability introduction and ticket creation from days to seconds.
+Visibility: Provided a "Single Pane of Glass" for the security team via Datadog, moving from reactive scanning to proactive security management.
+
+Project 5: Multi-Vector Cloud Cost Optimization & FinOps
+Focus: Infrastructure Cost Reduction, Log Aggregation, and On-Demand Observability
+
+1. Business Use Case & Problem Statement
+
+Challenge: The organization faced a ballooning Datadog monthly bill driven by inefficient default configurations across Logging, Synthetic Monitoring, and Application Performance Monitoring (APM).
+Pain Points: Licensing costs for 100+ hosts, excessive polling frequencies for health checks, and "always-on" APM in non-production environments were creating unsustainable overhead.
+Goal: Drastically reduce annual billing by 30% without losing critical visibility or security.
+
+2. Technical Execution & Methodology
+
+Log Architecture Re-engineering:
+
+Consolidation: Designed a centralized Rsyslog hub to aggregate logs from 100+ distributed servers into a single, well-defined directory structure.
+Licensing Hack: Strategically deployed the Datadog Agent only on the central hubs (e.g., 1 agent per 10-20 servers). This shifted the cost from ~$1,400/month for 100 hosts down to ~$140/month—a 90% reduction in agent licensing fees.
+Security: Hardened the pipeline by configuring TLS Encryption for all Rsyslog TCP transfers, ensuring data integrity and compliance during transit.
+
+Synthetic Monitoring Optimization:
+Frequency Tuning: Identified that uptime checks were polling at the highest possible frequency (lowest interval), causing a massive spike in billable polling counts.
+Geographic Refinement: Discovered checks were running from all global AWS regions. I restricted tests to only 2 key regions where the actual customer base resided.
+Impact: Doubling the polling window and pruning locations maintained valid uptime data while significantly cutting "per-check" costs.
+
+On-Demand APM (Self-Service Automation):
+Environment Policy: Proposed and executed the removal of "always-on" APM from Dev/UAT environments, reserving permanent monitoring for Production.
+Self-Service Pipeline: Developed an automation that allows developers to enable APM on-demand via a CI/CD pipeline for specific services.
+Auto-Remediation: Integrated a "Self-Destruct" logic that automatically disables APM after 3 days, preventing accidental "cost-leaks" in non-prod environments.
+
+3. Key Metrics & Results
+
+Direct Savings: Achieved an overall 30% reduction in annual Datadog billing.
+Infrastructure Efficiency: Reduced the "Observability Tax" per host, allowing the team to scale the fleet without a linear increase in monitoring costs.
+DevEx Improvement: Empowered developers with self-service APM tools, fostering a culture of cost-awareness and ownership.
+
+Project 6: Custom Enterprise Observability Platform (In-House)
+Focus: Full-Stack Internal Tooling, Remote Monitoring, and Legacy Systems Optimization
+
+1. Business Use Case & Problem Statement
+
+Challenge: The organization required real-time visibility into a massive fleet of 800+ on-premises servers (RHEL and SUSE) on a restricted budget that didn't allow for expensive commercial monitoring suites.
+Pain Points: Lack of centralized health data, manual troubleshooting for DB connectivity, and fragmented log access across hundreds of enterprise nodes.
+Goal: Engineer a low-latency, centralized web application to provide "Single Pane of Glass" visibility into infrastructure health, storage, and application connectivity.
+
+2. Technical Execution & Methodology
+
+Web Architecture:
+Developed a custom web application deployed on Apache, utilizing Python for backend logic and Bash for low-level systems integration.
+
+Agentless Monitoring Engine:
+
+Architected a high-performance cluster of scripts that utilized SSH to pull real-time metrics across 800+ servers simultaneously.
+Designed the backend to aggregate data on-demand, allowing for instantaneous state refreshes across the fleet.
+
+Deep-System Observability:
+Implemented drill-down capabilities for every host, exposing critical OS-level metrics: Inode usage, Mount point health, CPU/Memory utilization, and real-time System Logs.
+
+Application-Specific Validation:
+Developed a specialized diagnostic feature for JBoss Application Servers.
+Integrated JBoss CLI into the web interface, allowing users to trigger live JDBC connection tests with a single click to troubleshoot database bottlenecks instantly.
+
+3. Key Metrics & Results
+
+Scale: Successfully managed and monitored a large-scale environment of 800+ RedHat and SUSE Enterprise servers.
+Operational Velocity: Reduced Mean Time to Resolution (MTTR) by centralizing logs and health data that previously required manual SSH logins for every incident.
+Cost Savings: Delivered a comprehensive observability solution at zero licensing cost, proving the viability of in-house tooling for complex enterprise environments.
+
+Automations:
 Automated Jboss version upgrade using ansible, migrating encrypted passwords from jboss configs to jboss keystore, while restoring all jdbc connections and system properties.
 CICD: Designed and implimented CICD solutions using GitHub actions, GutLab CI/CD, GoCd, Jenkins along with Bash, Python, Ansible.
 Wrote multiple scripts in Python and bash for automating day to day repetitive tasks. 
