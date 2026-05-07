@@ -125,7 +125,7 @@ suggestions = [
     "Reduce Datadog costs by 30%",
     "Self-Healing Infrastructure",
     "Skills in Agentic AI and RAG",
-    "Automation with Ansible/Python",
+    "Automated Vulnerability Management",
     "AWS ECS Fargate Migrations"
 ]
 
