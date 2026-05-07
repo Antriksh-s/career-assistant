@@ -20,9 +20,7 @@ st.markdown("""
     /* Global alignment fix */
     .block-container { padding-top: 2rem; }
     
-    /* REFINED TYPEWRITER ANIMATION 
-       Fixes: Left-alignment, subtle weight, and precise reveal.
-    */
+    /* REFINED TYPEWRITER ANIMATION */
     .typewriter-container {
         display: flex;
         justify-content: flex-start;
@@ -38,7 +36,7 @@ st.markdown("""
         overflow: hidden;
         border-right: .15em solid #10b981;
         white-space: nowrap;
-        margin: 0; /* Ensures it starts from the left */
+        margin: 0;
         letter-spacing: .05em;
         animation: typing 3s steps(40, end), blink-caret .75s step-end infinite;
     }
@@ -51,7 +49,7 @@ st.markdown("""
             background-color: #0e1117 !important;
         }
         section[data-testid="stSidebar"] * {
-            color: #ffffff !important; /* Forces white text to stop fading */
+            color: #ffffff !important;
         }
         [data-testid="stChatMessageUser"] {
             background-color: rgba(59, 130, 246, 0.15);
@@ -66,10 +64,10 @@ st.markdown("""
     /* LIGHT MODE SPECIFIC (System-driven) */
     @media (prefers-color-scheme: light) {
         section[data-testid="stSidebar"] {
-            background-color: #f1f5f9 !important; /* Solid Slate for visibility */
+            background-color: #f1f5f9 !important;
         }
         section[data-testid="stSidebar"] * {
-            color: #1e293b !important; /* Strong slate text for light mode */
+            color: #1e293b !important;
         }
         [data-testid="stChatMessageUser"] {
             background-color: #e6f0ff;
@@ -136,35 +134,41 @@ for i, prompt in enumerate(suggestions):
 
 # 8. Unified Logic
 chat_input = st.chat_input("Ask about my experience...")
-final_prompt = chat_input if chat_input else st.session_state.active_prompt
 
-if final_prompt:
-    st.session_state.messages.append({"role": "user", "content": final_prompt})
+# Handle Input Logic
+if chat_input or st.session_state.active_prompt:
+    user_msg = chat_input if chat_input else st.session_state.active_prompt
+    st.session_state.messages.append({"role": "user", "content": user_msg})
     st.session_state.active_prompt = None
-    st.rerun()
 
-# 9. Chat Display
-for msg in st.session_state.messages:
-    avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
-    with st.chat_message(msg["role"], avatar=avatar):
-        st.markdown(msg["content"])
+# 9. Chat Display Container (FIXES AUTOSCROLL)
+chat_container = st.container()
 
-# 10. Response Logic with Left-Aligned Typewriter
-if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
-    last_user_prompt = st.session_state.messages[-1]["content"]
-    
-    with st.chat_message("assistant", avatar="🤖"):
-        placeholder = st.empty()
-        # Wrapper div to force left alignment
-        placeholder.markdown("""
-            <div class='typewriter-container'>
-                <div class='typewriter-loader'>CONSULTING KNOWLEDGE BASE...</div>
-            </div>
-        """, unsafe_allow_html=True)
+with chat_container:
+    # Render Message History
+    for msg in st.session_state.messages:
+        avatar = "👨‍💻" if msg["role"] == "user" else "🤖"
+        with st.chat_message(msg["role"], avatar=avatar):
+            st.markdown(msg["content"])
+
+    # 10. Response Generation Logic
+    if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
+        last_user_prompt = st.session_state.messages[-1]["content"]
         
-        try:
-            full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
-            placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-        except Exception as e:
-            placeholder.error("System connection interrupted.")
+        with st.chat_message("assistant", avatar="🤖"):
+            placeholder = st.empty()
+            placeholder.markdown("""
+                <div class='typewriter-container'>
+                    <div class='typewriter-loader'>CONSULTING KNOWLEDGE BASE...</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            try:
+                # Call backend
+                full_response = get_chat_response(last_user_prompt, st.session_state.session_id)
+                placeholder.markdown(full_response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                # Final rerun to sync state and reset the script pass
+                st.rerun()
+            except Exception as e:
+                placeholder.error("System connection interrupted.")
